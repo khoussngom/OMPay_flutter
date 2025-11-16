@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../validators/UserValidators.dart';
 
 class InputPassword extends StatelessWidget {
   final TextEditingController controller;
@@ -22,7 +23,7 @@ class InputPassword extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.white),
+          borderSide: const BorderSide(color: Color.fromARGB(255, 255, 110, 14)),
         ),
         filled: true,
         fillColor: Colors.white.withOpacity(0.1),
@@ -32,6 +33,9 @@ class InputPassword extends StatelessWidget {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Veuillez entrer votre mot de passe';
+        }
+        if (!UserValidators.isValidPassword(value)) {
+          return 'Le mot de passe doit contenir au moins 8 caractères';
         }
         return null;
       },

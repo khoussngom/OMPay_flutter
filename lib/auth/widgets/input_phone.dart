@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../validators/Regex.dart';
 
 class InputPhone extends StatelessWidget {
   final TextEditingController controller;
@@ -22,7 +23,7 @@ class InputPhone extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.white),
+          borderSide: const BorderSide(color: Color.fromARGB(255, 255, 110, 14)),
         ),
         filled: true,
         fillColor: Colors.white.withOpacity(0.1),
@@ -33,11 +34,8 @@ class InputPhone extends StatelessWidget {
         if (value == null || value.isEmpty) {
           return 'Veuillez entrer votre numéro de téléphone';
         }
-        if (value.length != 9) {
-          return 'Le numéro doit contenir 9 chiffres (ex: 774730039)';
-        }
-        if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-          return 'Le numéro doit contenir uniquement des chiffres';
+        if (!Regex.senegalPhoneRegex.hasMatch(value)) {
+          return 'Numéro de téléphone invalide (ex: 774730039)';
         }
         return null;
       },

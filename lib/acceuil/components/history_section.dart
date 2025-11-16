@@ -21,13 +21,13 @@ class HistorySection extends StatelessWidget {
   }
 
   Color _getAmountColor(String type) {
-    return type.toUpperCase() == 'DEPOT' || type.toUpperCase() == 'ACHAT CREDIT'
+    return type.toUpperCase() == 'DEPOT' || type.toUpperCase() == 'TRANSFERT_ENTRANT'
         ? const Color(0xFF4CAF50)
         : const Color(0xFFFF5252);
   }
 
   String _formatAmount(double montant, String type) {
-    final isPositive = type.toUpperCase() == 'DEPOT' || type.toUpperCase() == 'ACHAT CREDIT';
+    final isPositive = type.toUpperCase() == 'DEPOT' || type.toUpperCase() == 'TRANSFERT_ENTRANT';
     return '${isPositive ? '+' : ''} ${montant.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]} ')} CFA';
   }
 
@@ -77,9 +77,12 @@ String formatJourMois(String date) {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
-                    children: [
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   
-                      Container(
+                    children: [
+                      Row(
+                        children: [
+                          Container(
                         width: 56,
                         height: 56,
                         decoration: BoxDecoration(
@@ -120,9 +123,13 @@ String formatJourMois(String date) {
                           ],
                         ),
                       ),
+                        ]),
+                      
+                    
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
+
                           Text(
                             _formatAmount(transaction.montant, transaction.type),
                             style: TextStyle(
