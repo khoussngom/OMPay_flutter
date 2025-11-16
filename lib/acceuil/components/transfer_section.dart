@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class TransferSection extends StatefulWidget {
-  const TransferSection({super.key});
+  final Future<void> Function(String merchant, double amount, bool isPayer) onTransfer;
+
+  const TransferSection({super.key, required this.onTransfer});
 
   @override
   State<TransferSection> createState() => _TransferSectionState();
@@ -9,6 +11,7 @@ class TransferSection extends StatefulWidget {
 
 class _TransferSectionState extends State<TransferSection> {
   bool isPayer = true;
+  bool _isLoading = false;
   final TextEditingController merchantController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
 
@@ -199,11 +202,38 @@ class _TransferSectionState extends State<TransferSection> {
           const SizedBox(height: 25),
 
           ElevatedButton(
-            onPressed: () {
-
+            onPressed: _isLoading ? null : () async {
+              final merchant = merchantController.text.trim();
+              final amountText = amountController.text.trim();
+              if (merchant.isEmpty || amountText.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Veuillez remplir tous les champs')),
+                );
+                return;
+              }
+              final amount = double.tryParse(amountText);
+              if (amount == null || amount <= 0) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Montant invalide')),
+                );
+                return;
+              }
+              setState(() => _isLoading = true);
+              try {
+                await widget.onTransfer(merchant, amount, isPayer);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Transaction réussie')),
+                );
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Erreur: $e')),
+                );
+              } finally {
+                setState(() => _isLoading = false);
+              }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange.shade700,
+              backgroundColor: _isLoading ? Colors.orange.shade300 : Colors.orange.shade700,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 20),
               shape: RoundedRectangleBorder(
@@ -211,14 +241,16 @@ class _TransferSectionState extends State<TransferSection> {
               ),
               elevation: 0,
             ),
-            child: Text(
-              'Valider',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18.0,
+            child: _isLoading
+                ? const CircularProgressIndicator(color: Colors.white)
+                : Text(
+                    'Valider',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                        ),
                   ),
-            ),
           ),
         ],
       ),

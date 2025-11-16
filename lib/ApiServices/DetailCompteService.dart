@@ -13,4 +13,9 @@ class DetailCompteService {
     final response = await _compteApiService.transfer(dest, montant);
     return DetailCompte.fromJson(response);
   }
+
+  Future<DetailCompte> paiement(String marchand, double montant) async {
+    final response = await _compteApiService.paiement(marchand, montant);
+    return DetailCompte.fromJson(response);
+  }
 }

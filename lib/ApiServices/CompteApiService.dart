@@ -20,6 +20,12 @@ class CompteApiService extends BaseService {
     return data['data'];
   }
 
+  Future<Map<String, dynamic>> paiement(String marchand, double montant) async {
+    final url = '${ApiUrls['paiement']}?marchand=$marchand&montant=$montant';
+    final data = await post(url, headers: {'Authorization': 'Bearer ${AuthSession.token}'});
+    return data['data'];
+  }
+
   Future<dynamic> createCompte(Map<String, dynamic> compteData) async {
     final data = await post(ApiUrls['createCompte']!, headers: {'Content-Type': 'application/json'}, body: jsonEncode(compteData));
     return data;

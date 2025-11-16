@@ -8,4 +8,5 @@ const Map<String,String> ApiUrls = {
   'createCompte': '$baseUrl/comptes',
   'getDetailCompte': '$baseUrl/comptes/me',
   'transfert': '$baseUrl/comptes/transfert',
+  'paiement': '$baseUrl/comptes/paiement',
 };

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../ApiServices/DetailCompteService.dart';
 import '../../entities/DetailCompte.dart';
@@ -16,11 +17,14 @@ class _HomePageState extends State<HomePage> {
   final DetailCompteService _detailCompteService = DetailCompteService();
   DetailCompte? _detailCompte;
   bool _isLoading = true;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    _fetchDetailCompte();
+    _fetchDetailCompte().then((_) {
+      _timer = Timer.periodic(const Duration(seconds: 1), (_) => _fetchDetailCompte());
+    });
   }
 
   Future<void> _fetchDetailCompte() async {
@@ -41,6 +45,21 @@ class _HomePageState extends State<HomePage> {
         );
       }
     }
+  }
+
+  Future<void> _handleTransfer(String merchant, double amount, bool isPayer) async {
+    if (isPayer) {
+      await _detailCompteService.paiement(merchant, amount);
+    } else {
+      await _detailCompteService.transfer(merchant, amount);
+    }
+    // After transfer/paiement, the periodic fetch will update the data
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -73,7 +92,7 @@ class _HomePageState extends State<HomePage> {
             user: user,
           ),
           const SizedBox(height: 20),
-          const TransferSection(),
+          TransferSection(onTransfer: _handleTransfer),
           const SizedBox(height: 20),
           HistorySection(transactions: _detailCompte!.transactions),
         ],

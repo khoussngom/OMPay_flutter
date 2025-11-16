@@ -9,7 +9,6 @@ class HistorySection extends StatelessWidget {
   IconData _getTransactionIcon(String type) {
     switch (type.toUpperCase()) {
       case 'DEPOT':
-      case 'ACHAT CREDIT':
         return Icons.account_balance_wallet;
       case 'TRANSFERT':
       case 'TRANSFERT D\'ARGENT':
@@ -32,19 +31,15 @@ class HistorySection extends StatelessWidget {
     return '${isPositive ? '+' : ''} ${montant.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]} ')} CFA';
   }
 
-  String _formatDate(String date) {
-    try {
-      final parts = date.split(' ');
-      if (parts.isNotEmpty) {
-        final dateParts = parts[0].split('-');
-        if (dateParts.length == 3) {
-          return '${dateParts[2]}/${dateParts[1]} ${parts.length > 1 ? parts[1].substring(0, 5) : ''}';
-        }
-      }
-    } catch (e) {
-    }
+String formatJourMois(String date) {
+  try {
+    final d = DateTime.parse(date);
+    return "${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}";
+  } catch (e) {
     return date;
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +133,7 @@ class HistorySection extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            _formatDate(transaction.date),
+                            formatJourMois(transaction.date),
                             style: const TextStyle(
                               fontSize: 18,
                               color: Colors.white60,
