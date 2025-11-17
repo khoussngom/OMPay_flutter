@@ -29,8 +29,16 @@ class _TransferSectionState extends State<TransferSection> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       padding: const EdgeInsets.all(24),
+  
       decoration: BoxDecoration(
-        color: const Color(0xFF1E1E1E),
+        image: DecorationImage(
+          image: const AssetImage('assets/backSectionTransfert.png'),
+          fit: BoxFit.cover,
+          colorFilter: ColorFilter.mode(
+            Colors.black.withOpacity(0.6),
+            BlendMode.darken,
+          ),
+        ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: const Color(0xFF2D2D2D),
@@ -42,8 +50,9 @@ class _TransferSectionState extends State<TransferSection> {
           blurRadius: 4,
           offset: Offset(0, 2),
         ),
-  ],
+    ],
       ),
+
       child: Form(
         key: _formKey,
         child: Column(
