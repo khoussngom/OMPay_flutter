@@ -174,7 +174,7 @@ class _TransferSectionState extends State<TransferSection> {
                 if (value == null || value.isEmpty) {
                   return 'Veuillez saisir le numéro/code marchand';
                 }
-                // Allow phone numbers or CNI codes
+            
                 if (!Regex.senegalPhoneRegex.hasMatch(value) && !Regex.isValidSenegalCNI.hasMatch(value)) {
                   return 'Numéro ou code invalide';
                 }

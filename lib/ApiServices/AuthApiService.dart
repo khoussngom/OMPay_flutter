@@ -9,7 +9,7 @@ class AuthApiService extends BaseService {
     print('URI: ${uri.toString()}');
     final data = await post(uri.toString(), headers: {'accept': '*/*'}, body: '');
     print('Response data: $data');
-    AuthSession.token = data['accessToken'];
-    AuthSession.refreshToken = data['refreshToken'];
+    await AuthSession.setToken(data['accessToken']);
+    await AuthSession.setRefreshToken(data['refreshToken']);
   }
 }

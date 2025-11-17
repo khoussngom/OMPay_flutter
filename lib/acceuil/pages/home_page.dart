@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../ApiServices/DetailCompteService.dart';
 import '../../entities/DetailCompte.dart';
+import '../../ApiServices/AuthSession.dart';
+import '../../auth/pages/login_page.dart';
 import '../components/header.dart';
 import '../components/transfer_section.dart';
 import '../components/history_section.dart';
@@ -53,7 +55,15 @@ class _HomePageState extends State<HomePage> {
     } else {
       await _detailCompteService.transfer(merchant, amount);
     }
-    // After transfer/paiement, the periodic fetch will update the data
+  }
+
+  Future<void> _logout() async {
+    await AuthSession.clearTokens();
+    if (mounted) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
+    }
   }
 
   @override
@@ -84,10 +94,44 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       backgroundColor: Colors.grey.shade900,
+      appBar: AppBar(
+        title: const Text('OM Pay'),
+        backgroundColor: Colors.orange.shade800,
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.orange.shade800,
+              ),
+              child: const Text(
+                'Menu',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Déconnexion'),
+              onTap: _logout,
+            ),
+          ],
+        ),
+      ),
       body: ListView(
         children: [
           Header(
-            title: 'OM Pay',
+            title: '',
             subtitle: 'Bienvenue',
             user: user,
           ),

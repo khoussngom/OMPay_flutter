@@ -10,19 +10,22 @@ class CompteApiService extends BaseService {
   }
 
   Future<Map<String, dynamic>> getDetailCompte() async {
-    final data = await get(ApiUrls['getDetailCompte']!, headers: {'Authorization': 'Bearer ${AuthSession.token}'});
+    final token = await AuthSession.getToken();
+    final data = await get(ApiUrls['getDetailCompte']!, headers: {'Authorization': 'Bearer $token'});
     return data['data'];
   }
 
   Future<Map<String, dynamic>> transfer(String dest, double montant) async {
+    final token = await AuthSession.getToken();
     final url = '${ApiUrls['transfert']}?dest=$dest&montant=$montant';
-    final data = await post(url, headers: {'Authorization': 'Bearer ${AuthSession.token}'});
+    final data = await post(url, headers: {'Authorization': 'Bearer $token'});
     return data['data'];
   }
 
   Future<Map<String, dynamic>> paiement(String marchand, double montant) async {
+    final token = await AuthSession.getToken();
     final url = '${ApiUrls['paiement']}?marchand=$marchand&montant=$montant';
-    final data = await post(url, headers: {'Authorization': 'Bearer ${AuthSession.token}'});
+    final data = await post(url, headers: {'Authorization': 'Bearer $token'});
     return data['data'];
   }
 
