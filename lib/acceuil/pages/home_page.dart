@@ -16,6 +16,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final DetailCompteService _detailCompteService = DetailCompteService();
   DetailCompte? _detailCompte;
   bool _isLoading = true;
@@ -93,17 +94,8 @@ class _HomePageState extends State<HomePage> {
     };
 
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.grey.shade900,
-      appBar: AppBar(
-        title: const Text('OM Pay'),
-        backgroundColor: Colors.orange.shade800,
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          ),
-        ),
-      ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -134,6 +126,7 @@ class _HomePageState extends State<HomePage> {
             title: '',
             subtitle: 'Bienvenue',
             user: user,
+            onMenuPressed: () => _scaffoldKey.currentState?.openDrawer(),
           ),
           const SizedBox(height: 20),
           TransferSection(onTransfer: _handleTransfer),

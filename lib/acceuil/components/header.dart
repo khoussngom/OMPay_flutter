@@ -4,12 +4,14 @@ class Header extends StatelessWidget {
   final String title;
   final String subtitle;
   final dynamic user;
+  final VoidCallback? onMenuPressed;
 
   const Header({
     super.key,
     required this.title,
     required this.subtitle,
     required this.user,
+    this.onMenuPressed,
   });
 
   @override
@@ -32,11 +34,14 @@ class Header extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-              
-                const Icon(
-                  Icons.menu,
-                  size: 32,
-                  color: Colors.white,
+
+                IconButton(
+                  onPressed: onMenuPressed,
+                  icon: const Icon(
+                    Icons.menu,
+                    size: 32,
+                    color: Colors.white,
+                  ),
                 ),
                 const SizedBox(height: 24),
         
