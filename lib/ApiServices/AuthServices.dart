@@ -1,5 +1,5 @@
 import '../ApiServices/AuthApiService.dart';
-import '../entities/AuthDto.dart';
+import '../domain/entities/AuthDto.dart';
 
 class AuthServices {
   Future<void> login(AuthDto authDto) async {

@@ -1,4 +1,4 @@
-import '../entities/User.dart';
+import '../domain/entities/User.dart';
 import '../ApiServices/ApiServices.dart';
 
 class UserServices {

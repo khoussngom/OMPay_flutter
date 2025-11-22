@@ -2,8 +2,8 @@ import 'dart:io';
 import '../ApiServices/UserServices.dart';
 import '../validators/UserValidators.dart';
 import '../validators/Regex.dart';
-import '../entities/User.dart';
-import '../entities/ClientEntity.dart';
+import '../domain/entities/User.dart';
+import '../domain/entities/ClientEntity.dart';
 
 class UserView {
     final UserServices _userServices = UserServices();

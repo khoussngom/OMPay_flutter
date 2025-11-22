@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../ApiServices/AuthServices.dart';
-import '../../entities/AuthDto.dart';
-import '../../acceuil/pages/home_page.dart';
+import '../../domain/entities/AuthDto.dart';
+// Temporarily commented - using new architecture
+// import '../../acceuil/pages/home_page.dart';
 import '../components/login_background.dart';
 import '../components/login_title.dart';
 import '../components/login_button.dart';
@@ -46,10 +47,11 @@ class _LoginPageState extends State<LoginPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Connexion réussie !')),
         );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-        );
+        // Temporarily commented - using new architecture with GetX navigation
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => const HomePage()),
+        // );
       }
     } catch (e) {
       if (mounted) {

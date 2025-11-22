@@ -1,5 +1,5 @@
 import 'dart:io';
-import '../entities/AuthDto.dart';
+import '../domain/entities/AuthDto.dart';
 import '../ApiServices/AuthServices.dart';
 
 class AuthViews {
