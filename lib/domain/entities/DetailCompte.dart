@@ -29,20 +29,23 @@ class Transaction {
   final double montant;
   final String date;
   final String? codeMarchand;
+  final String? numero;
 
   Transaction({
     required this.type,
     required this.montant,
     required this.date,
     this.codeMarchand,
+    this.numero,
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(
       type: json['type'],
-      montant: double.parse(json['montant']),
+      montant: double.parse(json['montant'].toString()),
       date: json['date'],
       codeMarchand: json['codeMarchand'],
+      numero: json['numero'],
     );
   }
 }

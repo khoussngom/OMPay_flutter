@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../domain/usecases/get_detail_compte_usecase.dart';
 import '../../domain/usecases/paiement_usecase.dart';
 import '../../domain/usecases/transfer_usecase.dart';
+import '../../domain/usecases/schedule_transfer_usecase.dart';
 import '../../domain/entities/DetailCompte.dart';
 import '../../data/services/storage_service.dart';
 import '../../core/exceptions/transaction_exceptions.dart';
@@ -11,9 +12,10 @@ class HomeController extends GetxController {
   final GetDetailCompteUseCase getDetailCompteUseCase;
   final PaiementUseCase paiementUseCase;
   final TransferUseCase transferUseCase;
+  final ScheduleTransferUseCase scheduleTransferUseCase;
   final StorageService storageService;
 
-  HomeController(this.getDetailCompteUseCase, this.paiementUseCase, this.transferUseCase, this.storageService);
+  HomeController(this.getDetailCompteUseCase, this.paiementUseCase, this.transferUseCase, this.scheduleTransferUseCase, this.storageService);
 
   var detailCompte = Rxn<DetailCompte>();
   var isLoading = true.obs;
@@ -44,16 +46,24 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> handleTransfer(String merchant, double amount, bool isPayer) async {
+  Future<void> handleTransaction(String merchant, double amount, int transferType, DateTime? scheduledDate) async {
     try {
-      if (isPayer) {
+      if (transferType == 2) {
+        // Scheduled transfer
+        final date = scheduledDate!;
+        final dateProgrammee = '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}T${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}:${date.second.toString().padLeft(2, '0')}';
+        await scheduleTransferUseCase.execute(merchant, amount, dateProgrammee);
+        Get.snackbar('Succès', 'Transfert programmé avec succès');
+      } else if (transferType == 0) {
+        // Payment
         await paiementUseCase.execute(merchant, amount);
         Get.snackbar('Succès', 'Paiement effectué avec succès');
       } else {
+        // Transfer
         await transferUseCase.execute(merchant, amount);
         Get.snackbar('Succès', 'Transfert effectué avec succès');
       }
-      
+
       await fetchDetailCompte();
     } catch (e) {
       final transactionException = TransactionErrorParser.parseError(e);
@@ -69,7 +79,9 @@ class HomeController extends GetxController {
     }
   }
 
+
   Future<void> logout() async {
+    _timer?.cancel();
     await storageService.clearTokens();
     Get.offAllNamed('/login');
   }

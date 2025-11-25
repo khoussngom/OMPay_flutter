@@ -42,7 +42,7 @@ class HomePage extends StatelessWidget {
               onMenuPressed: () => scaffoldKey.currentState?.openDrawer(),
             ),
             const SizedBox(height: 20),
-            TransferSection(onTransfer: controller.handleTransfer),
+            TransferSection(onTransfer: controller.handleTransaction),
             const SizedBox(height: 20),
             HistorySection(transactions: detailCompte.transactions),
           ],

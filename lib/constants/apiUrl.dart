@@ -9,4 +9,5 @@ const Map<String,String> ApiUrls = {
   'getDetailCompte': '$baseUrl/comptes/me',
   'transfert': '$baseUrl/comptes/transfert',
   'paiement': '$baseUrl/comptes/paiement',
+  'scheduleTransfer': '$baseUrl/transferts/schedule',
 };

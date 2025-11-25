@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../validators/Regex.dart';
 
 class TransferSection extends StatefulWidget {
-  final Future<void> Function(String merchant, double amount, bool isPayer) onTransfer;
+  final Future<void> Function(String merchant, double amount, int transferType, DateTime? scheduledDate) onTransfer;
 
   const TransferSection({super.key, required this.onTransfer});
 
@@ -11,16 +11,19 @@ class TransferSection extends StatefulWidget {
 }
 
 class _TransferSectionState extends State<TransferSection> {
-  bool isPayer = true;
+  int transferType = 0;
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController merchantController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
+  DateTime? selectedDateTime;
 
   @override
   void dispose() {
     merchantController.dispose();
     amountController.dispose();
+    dateController.dispose();
     super.dispose();
   }
 
@@ -59,76 +62,122 @@ class _TransferSectionState extends State<TransferSection> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
 
-            Row(
+            Column(
               children: [
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () => setState(() => isPayer = true),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 14,
-                          height: 14,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: Colors.orange.shade700,
-                              width: 2,
+                Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => setState(() => transferType = 0),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 14,
+                              height: 14,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.orange.shade700,
+                                  width: 2,
+                                ),
+                                color: transferType == 0 ? Colors.orange.shade700 : Colors.transparent,
+                              ),
+                              child: transferType == 0
+                                  ? const Icon(
+                                      Icons.circle,
+                                      size:10,
+                                      color: Colors.white,
+                                    )
+                                  : null,
                             ),
-                            color: isPayer ? Colors.orange.shade700 : Colors.transparent,
-                          ),
-                          child: isPayer
-                              ? const Icon(
-                                  Icons.circle,
-                                  size:10,
+                            const SizedBox(width: 12),
+                            Text(
+                              'Payer',
+                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16.0,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => setState(() => transferType = 1),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 14,
+                              height: 14,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
                                   color: Colors.white,
-                                )
-                              : null,
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          'Payer',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18.0,
+                                  width: 2,
+                                ),
+                                color: transferType == 1 ? Colors.white : Colors.transparent,
                               ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () => setState(() => isPayer = false),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 14,
-                          height: 14,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: Colors.white,
-                              width: 2,
+                              child: transferType == 1
+                                  ? const Icon(
+                                      Icons.circle,
+                                      size:10,
+                                      color: Colors.black,
+                                    )
+                                  : null,
                             ),
-                            color: !isPayer ? Colors.white : Colors.transparent,
-                          ),
+                            const SizedBox(width: 12),
+                            Text(
+                              'Transférer',
+                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16.0,
+                                  ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 12),
-                        Text(
-                          'Transférer',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18.0,
-                              ),
-                        ),
-                      ],
+                      ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () => setState(() => transferType = 2),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 14,
+                        height: 14,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.blue.shade700,
+                            width: 2,
+                          ),
+                          color: transferType == 2 ? Colors.blue.shade700 : Colors.transparent,
+                        ),
+                        child: transferType == 2
+                            ? const Icon(
+                                Icons.circle,
+                                size:10,
+                                color: Colors.white,
+                              )
+                            : null,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Programmer un transfert',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16.0,
+                            ),
+                      ),
+                    ],
                   ),
                 ),
-
               ],
             ),
             const SizedBox(height: 32),
@@ -232,7 +281,82 @@ class _TransferSectionState extends State<TransferSection> {
                 return null;
               },
             ),
-            const SizedBox(height: 25),
+            const SizedBox(height: 15),
+
+            if (transferType == 2) ...[
+              TextFormField(
+                controller: dateController,
+                readOnly: true,
+                style: const TextStyle(color: Colors.white, fontSize: 18),
+                decoration: InputDecoration(
+                  hintText: 'Sélectionner la date et heure',
+                  hintStyle: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontSize: 18,
+                  ),
+                  filled: true,
+                  fillColor: const Color(0xFF0D0D0D),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: Colors.grey.shade800,
+                      width: 1,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: Colors.grey.shade800,
+                      width: 1,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: Colors.blue.shade700,
+                      width: 2,
+                    ),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 16,
+                  ),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.calendar_today, color: Colors.white),
+                    onPressed: () async {
+                      final date = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now().add(const Duration(days: 1)),
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime.now().add(const Duration(days: 365)),
+                      );
+                      if (date != null) {
+                        final time = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                        );
+                        if (time != null) {
+                          selectedDateTime = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+                          dateController.text = '${selectedDateTime!.toLocal().toString().split('.')[0]}';
+                        }
+                      }
+                    },
+                  ),
+                ),
+                validator: (value) {
+                  if (transferType == 2) {
+                    if (value == null || value.isEmpty) {
+                      return 'Veuillez sélectionner une date et heure';
+                    }
+                    if (selectedDateTime != null && selectedDateTime!.isBefore(DateTime.now())) {
+                      return 'La date doit être dans le futur';
+                    }
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 15),
+            ],
 
             ElevatedButton(
               onPressed: _isLoading ? null : () async {
@@ -243,10 +367,8 @@ class _TransferSectionState extends State<TransferSection> {
                 final amount = double.parse(amountController.text.trim());
                 setState(() => _isLoading = true);
                 try {
-                  await widget.onTransfer(merchant, amount, isPayer);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Transaction réussie')),
-                  );
+                  await widget.onTransfer(merchant, amount, transferType, transferType == 2 ? selectedDateTime : null);
+                  // The snackbar is handled in the controller
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Erreur: $e')),
@@ -267,7 +389,7 @@ class _TransferSectionState extends State<TransferSection> {
               child: _isLoading
                   ? const CircularProgressIndicator(color: Colors.white)
                   : Text(
-                      'Valider',
+                      transferType == 2 ? 'Programmer' : 'Valider',
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
