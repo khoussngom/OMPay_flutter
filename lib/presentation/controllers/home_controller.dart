@@ -7,6 +7,9 @@ import '../../domain/usecases/schedule_transfer_usecase.dart';
 import '../../domain/entities/DetailCompte.dart';
 import '../../data/services/storage_service.dart';
 import '../../core/exceptions/transaction_exceptions.dart';
+import '../../routes/app_routes.dart';
+import '../pages/login_page.dart';
+import '../controllers/auth_controller.dart';
 
 class HomeController extends GetxController {
   final GetDetailCompteUseCase getDetailCompteUseCase;
@@ -83,6 +86,12 @@ class HomeController extends GetxController {
   Future<void> logout() async {
     _timer?.cancel();
     await storageService.clearTokens();
-    Get.offAllNamed('/login');
+
+    // Ensure AuthController is available for the login page
+    if (!Get.isRegistered<AuthController>()) {
+      Get.put(AuthController(Get.find()));
+    }
+
+    Get.offAll(() => const LoginPage());
   }
 }

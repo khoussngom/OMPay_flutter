@@ -31,7 +31,7 @@ class AppBindings extends Bindings {
     Get.lazyPut(() => TransferUseCase(Get.find()));
     Get.lazyPut(() => ScheduleTransferUseCase(Get.find()));
 
-    Get.lazyPut(() => AuthController(Get.find()));
+    Get.put(AuthController(Get.find()));
     Get.lazyPut(() => HomeController(Get.find(), Get.find(), Get.find(), Get.find(), Get.find<StorageService>()));
   }
 }
